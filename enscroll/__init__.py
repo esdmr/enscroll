@@ -152,7 +152,7 @@ def main():
     with open(posixpath.join(posixpath.dirname(__file__), "template.tex"), "r") as f:
         preamble = f.read()
 
-    lines = [rf"\NSCRline{{{" ".join(i)}}}" for i in source_lines]
+    lines = [rf"\NSCRline{{{"".join(i)}}}" for i in source_lines]
 
     options["lines"] = str(len(lines))
     options["linenolen"] = str(len(options["lines"]))
