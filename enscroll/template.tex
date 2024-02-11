@@ -1,0 +1,99 @@
+\documentclass{article}
+
+\usepackage{geometry}
+\usepackage{fontspec}
+\usepackage{tikz}
+
+\setmonofont{\NSCRfamily}[\NSCRfeatures]
+
+\ExplSyntaxOn
+\box_new:N \nscr_z_hbox
+\hbox_gset:Nn \nscr_z_hbox {\ttfamily 0}
+\dim_const:Nn \NSCRch {\box_wd:N \nscr_z_hbox}
+
+\box_new:N \nscr_bg_hbox
+\hbox_gset:Nn \nscr_bg_hbox {\ttfamily bg}
+\dim_const:Nn \NSCRhd {\box_ht_plus_dp:N \nscr_bg_hbox}
+\ExplSyntaxOff
+
+\geometry{
+	nomarginpar,
+	noheadfoot,
+	\NSCRpaper,
+	top=\NSCRtop,
+	bottom=\NSCRbottom,
+	left=\NSCRleft,
+	right=\NSCRright,
+}
+\pagenumbering{gobble}
+\pagestyle{empty}
+
+\newcounter{NSCRpageno}
+\newcounter{NSCRlineno}
+
+\tikzset{
+	NSCRhead/.style={
+		execute at begin node={\ttfamily\strut},
+	},
+	NSCRname/.style={
+		anchor=south west,
+		xshift=\NSCRleft,
+		yshift=-\NSCRtop,
+	},
+	NSCRpageno/.style={
+		anchor=south east,
+		xshift=-\NSCRright,
+		yshift=-\NSCRtop,
+	},
+	NSCRfirst/.style={
+		xshift=\NSCRlinenolen\NSCRch + \NSCRleft,
+		yshift=-\NSCRhd - \NSCRtop,
+	},
+	NSCRline/.style={
+		inner sep=0,
+		outer sep=0,
+		minimum height=\NSCRhd,
+		execute at begin node={\ttfamily\strut},
+	},
+	NSCRlinect/.style={
+		anchor=north west,
+		xshift=.5\NSCRch,
+	},
+	NSCRlineno/.style={
+		anchor=north east,
+		xshift=-.5\NSCRch,
+	},
+}
+
+\newcommand{\NSCRrule}{
+	\draw (current page.west|-next) -- (current page.east|-next);
+}
+
+\newenvironment{NSCRpage}{
+	\stepcounter{NSCRpageno}
+	\begin{tikzpicture}[remember picture, overlay]
+		\coordinate[NSCRfirst] (next) at (current page.north west);
+		\NSCRrule
+		\node[NSCRhead, NSCRname] at (current page.north west) {\NSCRdir/\textbf{\NSCRname}};
+		\node[NSCRhead, NSCRpageno] at (current page.north east) {Page \textbf{\theNSCRpageno{}} of \textbf{\NSCRpages}};
+}{
+		\NSCRrule
+		\coordinate[yshift=\NSCRbottom] (next) at (current page.south west);
+		\NSCRrule
+	\end{tikzpicture}
+	\newpage
+}
+
+\newcommand{\NSCRline}[1]{
+	\stepcounter{NSCRlineno}
+	\node[NSCRline, NSCRlineno] (line) at (next) {\theNSCRlineno};
+	\node[NSCRline, NSCRlinect] at (next) {#1};
+	\draw (next) -- (next|-line.south east) coordinate (next);
+}
+
+\let \NSCRt = \textasciitilde
+\let \NSCRu = \textunderscore
+\let \NSCRb = \textbackslash
+\let \NSCRc = \textasciicircum
+\let \NSCRd = \textdollar
+\newcommand{\NSCRs}{\phantom{0}}
