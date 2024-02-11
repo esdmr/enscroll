@@ -1,6 +1,7 @@
 import itertools
 import posixpath
 import sys
+import typing
 
 import pygments
 import pygments.lexers
@@ -45,16 +46,16 @@ options: dict[str, str] = {
 }
 
 
-def format_token(type: str, content: str):
+def format_token(type: typing.Any, content: str):
     content = content.translate(latex_encoded_verbatim)
 
-    if "s" in type:
+    if type in pygments.token.String:
         return rf"\textbf{{{content}}}"
-    elif "c" in type:
+    elif type in pygments.token.Comment:
         return rf"\textit{{{content}}}"
-    elif "k" in type:
+    elif type in pygments.token.Keyword:
         return rf"\textbf{{{content}}}"
-    elif "n" in type:
+    elif type in pygments.token.Name:
         return rf"\textit{{{content}}}"
     else:
         return content
@@ -129,7 +130,7 @@ def main():
 
     source_lines: list[list[str]] = [[]]
 
-    for token, content in pygments.lex(
+    for type, content in pygments.lex(
         source,
         pygments.lexers.get_lexer_for_filename(
             path,
@@ -137,17 +138,6 @@ def main():
             tabsize=int(options["tabsize"]),
         ),
     ):
-        type = ""
-
-        if token in pygments.token.String:
-            type += "s"
-        elif token in pygments.token.Comment:
-            type += "c"
-        elif token in pygments.token.Keyword:
-            type += "k"
-        elif token in pygments.token.Name:
-            type += "n"
-
         i, *lines = content.split("\n")
 
         if i:
