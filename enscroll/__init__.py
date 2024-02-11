@@ -43,6 +43,7 @@ options: dict[str, str] = {
     "features": "Scale=0.9",
     "linechunks": "60",
     "tabsize": "4",
+    "linenospace": "1.5em",
 }
 
 
@@ -68,28 +69,17 @@ def main():
     # This should use argparse instead.
     for i in sys.argv[1:]:
         try:
-            value = i.split("=", 1)[1]
-        except IndexError:
+            name, value = i[2:].split("=", 1)
+        except ValueError:
+            name = i[2:]
             value = ""
 
         if not is_options or not i.startswith("-"):
             path = i
         elif i == "--":
             is_options = False
-        elif i == "--a4":
-            options["paper"] = "a4paper"
-        elif i == "--a5":
-            options["paper"] = "a5paper"
-        elif i == "--b5":
-            options["paper"] = "b5paper"
-        elif i == "--executive":
-            options["paper"] = "executivepaper"
-        elif i == "--legal":
-            options["paper"] = "legalpaper"
-        elif i == "--letter":
-            options["paper"] = "letterpaper"
-        elif i.startswith("--paper="):
-            options["paper"] = value
+        elif i in {"--a4", "--a5", "--b5", "--executive", "--legal", "--letter"}:
+            options["paper"] = f"{name}paper"
         elif i.startswith("--margin="):
             options["top"] = value
             options["bottom"] = value
@@ -101,22 +91,8 @@ def main():
         elif i.startswith("--horizontal="):
             options["left"] = value
             options["right"] = value
-        elif i.startswith("--top="):
-            options["top"] = value
-        elif i.startswith("--bottom="):
-            options["bottom"] = value
-        elif i.startswith("--left="):
-            options["left"] = value
-        elif i.startswith("--right="):
-            options["right"] = value
-        elif i.startswith("--family="):
-            options["family"] = value
-        elif i.startswith("--features="):
-            options["features"] = value
-        elif i.startswith("--linechunks="):
-            options["linechunks"] = value
-        elif i.startswith("--tabsize="):
-            options["tabsize"] = value
+        elif i.startswith("--") and name in options:
+            options[name] = value
         else:
             raise Exception(f"Unknown option {i}")
 

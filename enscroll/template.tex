@@ -14,6 +14,8 @@
 \box_new:N \nscr_bg_hbox
 \hbox_gset:Nn \nscr_bg_hbox {\ttfamily bg}
 \dim_const:Nn \NSCRhd {\box_ht_plus_dp:N \nscr_bg_hbox}
+
+\dim_const:Nn \NSCRlns {\NSCRlinenospace}
 \ExplSyntaxOff
 
 \geometry{
@@ -38,16 +40,16 @@
 	NSCRname/.style={
 		anchor=south west,
 		xshift=\NSCRleft,
-		yshift=-\NSCRtop,
+		yshift=-\NSCRtop + \NSCRch,
 	},
 	NSCRpageno/.style={
 		anchor=south east,
 		xshift=-\NSCRright,
-		yshift=-\NSCRtop,
+		yshift=-\NSCRtop + \NSCRch,
 	},
 	NSCRfirst/.style={
-		xshift=\NSCRlinenolen\NSCRch + \NSCRleft,
-		yshift=-\NSCRhd - \NSCRtop,
+		xshift=\NSCRlinenolen\NSCRch + .5\NSCRlns + \NSCRleft,
+		yshift=-\NSCRtop,
 	},
 	NSCRline/.style={
 		inner sep=0,
@@ -57,11 +59,11 @@
 	},
 	NSCRlinect/.style={
 		anchor=north west,
-		xshift=.5\NSCRch,
+		xshift=.5\NSCRlns,
 	},
 	NSCRlineno/.style={
 		anchor=north east,
-		xshift=-.5\NSCRch,
+		xshift=-.5\NSCRlns,
 	},
 }
 

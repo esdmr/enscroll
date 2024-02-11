@@ -35,3 +35,4 @@ Options:
   `fontspec` package. Defaults to `Scale=0.9`.
 - `--linechunks=<int>`: Number of lines per page. Defaults to `60`.
 - `--tabsize=<int>`: Width of horizontal tab columns. Defaults to `4`.
+- `--linenospace=<dimension>`: Space between the line number and the content. Defaults to `1.5em`.
